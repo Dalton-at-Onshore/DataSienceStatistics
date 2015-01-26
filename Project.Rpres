@@ -1,0 +1,75 @@
+Secondary Education Research Project
+========================================================
+author: Dalton Sloan
+date: `r date()`
+
+Why use this application?
+========================================================
+
+- Basic Facility Information
+- Easy to search table
+- Easy to view charts with location information
+
+Basic Facility Information
+========================================================
+
+All of the basic location information for secondary education facilities in the US including:
+
+- NAME
+- ALIAS
+- ADDRESS
+- CITY
+- STATE
+- ZIP
+- PHONE
+- URL
+
+
+URL Links For all schools
+========================================================
+
+Besides having access to basic location information, the table  included in this app also offers the URL for all education facilities if more information on the associated school is required
+
+Easy to search table
+========================================================
+
+With Shiny and the following code it has become possible to create dynamic easy to use charts that offer all the benefits of a fully developed web application; such as:
+
+```{r, eval=FALSE}
+output$table <- renderDataTable(data, options = list(
+    lengthMenu = list(c(10, 20, -1), c('10', '20', 'All')),
+    pageLength = 10,
+    pageWidth = 15)
+```
+
+- Sort
+- Filter
+- Records Per Page
+- Search
+
+Easy to view charts
+========================================================
+
+along with the `maps` and `mapproj` libraries it is possible to quickly and efficiently create easy to view maps with different forms of information. This application includes a barchart to see the total count of secondary education facilities in the United States by state, as well as a choropleth map to show the density across counties. 
+
+The code behind maps
+========================================================
+The code to do this is as follows:
+<small>
+```{r, eval=FALSE}
+percent_map <- function(var,color,legend.title,min=0,max=100){
+shades <- colorRampPalette(c("white", color))(100)
+var <- pmax(var, min)
+var <- pmin(var, max)
+percents <- as.integer(cut(var, 100, 
+    include.lowest=TRUE,ordered=TRUE))
+fills <- shades[percents]
+map("county",fill=TRUE,col=fills,resolution=0,lty=0,
+    projection="polyconic",myborder=1,mar=c(0,0,0,0))
+map("state", col = "black", fill = FALSE, add = TRUE,lty=1,lwd=1,
+    projection="polyconic",myborder=0,mar=c(0,0,0,0))
+legend.text <- c("1%","25%","50%","75%","100%")
+legend("bottomleft",legend = legend.text,fill=shades[c(1,25,50,75,100)],
+       title=legend.title)}
+```
+</small>
